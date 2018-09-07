@@ -22,6 +22,9 @@ DEPEND="${RDEPEND}
 	sys-devel/gettext
 	virtual/pkgconfig
 "
+PATCHES=(
+	"${FILESDIR}"/schemas-awaita-timed.patch
+)
 
 src_configure() {
 	gnome2_src_configure $(use_enable introspection)

@@ -12,7 +12,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/GnomeShell"
 
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
-IUSE="+browser-extension +ibus +networkmanager nsplugin -openrc-force"
+IUSE="+bluetooth +browser-extension +ibus +networkmanager nsplugin -openrc-force"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 KEYWORDS="amd64 ~ia64 ~ppc ~ppc64 ~x86"
@@ -31,7 +31,7 @@ COMMON_DEPEND="
 	>=x11-libs/gtk+-3.15.0:3[introspection]
 	>=dev-libs/libcroco-0.6.8:0.6
 	>=gnome-base/gnome-desktop-3.7.90:3=[introspection]
-	>=gnome-base/gsettings-desktop-schemas-3.27.90
+	>=gnome-base/gsettings-desktop-schemas-3.24.0
 	>=gnome-extra/evolution-data-server-3.17.2
 	>=media-libs/gstreamer-0.11.92:1.0
 	>=net-im/telepathy-logger-0.2.4[introspection]
@@ -39,10 +39,10 @@ COMMON_DEPEND="
 	>=sys-auth/polkit-0.100[introspection]
 	>=x11-libs/libXfixes-5.0
 	x11-libs/libXtst
-	>=x11-wm/mutter-3.30.0:0/0[introspection]
+	>=x11-wm/mutter-3.26.0:0/0[introspection]
 	>=x11-libs/startup-notification-0.11
 	dev-lang/sassc
-	>=dev-util/meson-0.47.0
+	>=dev-util/meson-0.43.0
 	>=dev-util/ninja-1.8
 	${PYTHON_DEPS}
 	dev-python/pygobject:3[${PYTHON_USEDEP}]
@@ -58,6 +58,7 @@ COMMON_DEPEND="
 
 	x11-apps/mesa-progs
 
+	bluetooth? ( >=net-wireless/gnome-bluetooth-3.9[introspection] )
 	networkmanager? (
 		app-crypt/libsecret
 		>=gnome-extra/nm-applet-0.9.8
@@ -102,7 +103,7 @@ RDEPEND="${COMMON_DEPEND}
 # avoid circular dependency, see bug #546134
 PDEPEND="
 	>=gnome-base/gdm-3.5[introspection]
-	>=gnome-base/gnome-control-center-3.8.3[networkmanager(+)?]
+	>=gnome-base/gnome-control-center-3.8.3[bluetooth(+)?,networkmanager(+)?]
 	browser-extension? ( gnome-extra/chrome-gnome-shell )
 "
 DEPEND="${COMMON_DEPEND}
@@ -116,21 +117,22 @@ DEPEND="${COMMON_DEPEND}
 PATCHES=(
 	# Change favorites defaults, bug #479918
 	"${FILESDIR}"/${PN}-3.22.0-defaults.patch
-#        "${FILESDIR}"/3.28.3-handle-no-window-case.patch
+        "${FILESDIR}"/3.28.3-handle-no-window-case.patch
         "${FILESDIR}"/tweener-Save-handlers-on-target-and-remove-them-on-destro.patch
-#        "${FILESDIR}"/dnd-Nullify-_dragActor-after-we-ve-destroyed-it-and-avoid.patch
+        "${FILESDIR}"/dnd-Nullify-_dragActor-after-we-ve-destroyed-it-and-avoid.patch
         "${FILESDIR}"/workspaceThumbnail-Disconnect-from-window-signals-on-dest.patch
-#        "${FILESDIR}"/workspace-Disconnect-from-window-signals-on-destruction.patch
+        "${FILESDIR}"/workspace-Disconnect-from-window-signals-on-destruction.patch
         "${FILESDIR}"/messageList-stop-syncing-if-closeButton-has-been-destroye.patch
         "${FILESDIR}"/automountManager-remove-allowAutorun-expire-timeout-on-vo.patch
         "${FILESDIR}"/workaround_crasher_fractional_scaling.patch
-#        "${FILESDIR}"/defer-position-changed-till-we-have-a-rect.patch
+        "${FILESDIR}"/defer-position-changed-till-we-have-a-rect.patch
 )
 src_configure() {
 	local emesonargs=(
-		-Dsystemd=true
-		-Dnetworkmanager=$(usex networkmanager true false)
-		-Dbrowser_plugin=true
+		-Denable-systemd=yes
+		-Dwith_bluetooth=$(usex bluetooth true false)
+		-Denable-networkmanager=$(usex networkmanager yes no)
+		-DBROWSER_PLUGIN_DIR="${EPREFIX}"/usr/$(get_libdir)/nsbrowser/plugins
 	)
 	meson_src_configure
 }

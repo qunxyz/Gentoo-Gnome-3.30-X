@@ -80,7 +80,6 @@ RDEPEND="${COMMON_DEPEND}
 
 PATCHES=(
 	"${FILESDIR}"/3.26.2-threaded-swap.patch
-	"${FILESDIR}"/mutter-3.30-fix-includes.patch
 )
 
 src_prepare() {

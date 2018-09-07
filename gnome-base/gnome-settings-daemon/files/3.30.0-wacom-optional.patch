@@ -37,6 +37,15 @@ diff -ur gnome-settings-daemon-3.28.1.orig/plugins/common/gsd-device-manager.c g
  #include "gsd-common-enums.h"
  #include "gnome-settings-bus.h"
  
+@@ -275,7 +274,7 @@
+ 	manager = g_object_get_data (G_OBJECT (screen), "gsd-device-manager-data");
+ 
+ 	if (!manager) {
+-#ifdef HAVE_WAYLAND
++#if HAVE_WAYLAND
+ 		if (gnome_settings_is_wayland ()) {
+ 			manager = g_object_new (GSD_TYPE_UDEV_DEVICE_MANAGER,
+ 						NULL);
 diff -ur gnome-settings-daemon-3.28.1.orig/plugins/common/meson.build gnome-settings-daemon-3.28.1/plugins/common/meson.build
 --- gnome-settings-daemon-3.28.1.orig/plugins/common/meson.build	2018-04-12 19:08:48.000000000 +0200
 +++ gnome-settings-daemon-3.28.1/plugins/common/meson.build	2018-05-03 19:54:55.510448394 +0200

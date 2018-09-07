@@ -6,12 +6,10 @@ GNOME2_LA_PUNT="yes" # plugins are dlopened
 PYTHON_COMPAT=( python{3_4,3_5,3_6} )
 PYTHON_REQ_USE="threads"
 
-inherit autotools gnome2 meson python-single-r1 vala
+inherit meson autotools gnome2 python-single-r1
 
 DESCRIPTION="Media player for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Videos"
-
-
 
 LICENSE="GPL-2+ LGPL-2+"
 SLOT="0"
@@ -79,17 +77,10 @@ DEPEND="${COMMON_DEPEND}
 	dev-libs/gobject-introspection-common
 	gnome-base/gnome-common
 "
-PATCHES=(
-	"${FILESDIR}"/disable-gst-inspect.patch
-)
+# Prevent dev-python/pylint dep, bug #482538
 
 pkg_setup() {
 	use python && python-single-r1_pkg_setup
-}
-
-src_prepare() {
-	use vala && vala_src_prepare
-	default
 }
 
 src_configure() {

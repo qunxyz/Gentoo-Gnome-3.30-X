@@ -60,9 +60,8 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Dmanpage=true
-		-Dtelepathy=true
-		-Dcheese=$(usex v4l true false)
+		-Dwith-manpage=true
+		-Dwith-cheese=$(usex v4l yes no)
 	)
 	meson_src_configure
 }

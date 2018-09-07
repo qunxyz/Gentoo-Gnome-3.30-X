@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 meson
+inherit gnome2
 
 DESCRIPTION="The Gnome System Monitor"
 HOMEPAGE="https://help.gnome.org/users/gnome-system-monitor/"
@@ -26,15 +26,14 @@ RDEPEND="
 # eautoreconf requires gnome-base/gnome-common
 DEPEND="${RDEPEND}
 	app-text/yelp-tools
-	>=sys-auth/polkit-0.114
+	>=dev-util/intltool-0.41.0
 	virtual/pkgconfig
 "
 
 src_configure() {
 	# XXX: appdata is deprecated by appstream-glib, upstream must upgrade
-	local emesonargs=(
-		$(meson_use systemd)
-		$(meson_use X wnck)
-	)
-	meson_src_configure
+	gnome2_src_configure \
+		$(use_enable systemd) \
+		$(use_enable X broken-wnck) \
+		APPDATA_VALIDATE="$(type -P true)"
 }

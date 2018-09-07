@@ -35,6 +35,9 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 	x11-base/xorg-proto
 "
+PATCHES=(
+	"${FILESDIR}/${PV}-bluetooth-client.patch"
+)
 
 src_configure() {
         local emesonargs=(

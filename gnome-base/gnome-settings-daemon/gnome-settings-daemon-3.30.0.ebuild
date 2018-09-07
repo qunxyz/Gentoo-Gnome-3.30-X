@@ -6,7 +6,7 @@ EAPI=6
 PYTHON_COMPAT=( python2_7 )
 GNOME2_LA_PUNT="yes"
 
-inherit gnome2 python-any-r1 systemd udev virtualx meson
+inherit gnome2 python-any-r1 systemd udev virtualx meson ninja-utils
 
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
@@ -92,7 +92,7 @@ DEPEND="${COMMON_DEPEND}
 "
 PATCHES=(
 	# Make Wacom devices optional
-	"${FILESDIR}"/3.30.0-wayland-wacom-optional.patch
+	"${FILESDIR}"/3.28.1-wacom-network_manager-optional.patch
 )
 
 # TypeErrors with python3; weird test errors with python2; all in power component that was made required now

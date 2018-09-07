@@ -65,6 +65,12 @@ src_test() {
 	 GSETTINGS_SCHEMA_DIR="${S}/schema" virtx emake check
 }
 
+src_install() {
+	gnome2_src_install
+	insinto /etc/pam.d
+	doins "${FILESDIR}"/gdm-password
+}
+
 pkg_postinst() {
 	# cap_ipc_lock only needed if building --with-libcap-ng
 	# Never install as suid root, this breaks dbus activation, see bug #513870
