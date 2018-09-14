@@ -120,11 +120,6 @@ DEPEND="${COMMON_DEPEND}
 	sys-devel/autoconf-archive
 "
 
-PATCHES=(
-	"${FILESDIR}"/3.28.2-optional-wacom-bluetooth-networkmanager.patch
-	"${FILESDIR}"/3.28.1-gcc-optional-kerberos.patch
-)
-
 src_configure() {
 #		$(use_enable colord color) \
 #		$(use_enable cups) \

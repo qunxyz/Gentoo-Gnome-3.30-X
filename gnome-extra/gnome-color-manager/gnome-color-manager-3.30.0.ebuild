@@ -41,7 +41,7 @@ DEPEND="${RDEPEND}
 
 PATCHES=(
 	# https://bugzilla.gnome.org/show_bug.cgi?id=796428
-	"${FILESDIR}"/3.28-remove-unwanted-check.patch
+	"${FILESDIR}"/3.30-remove-unwanted-check.patch
 )
 
 src_configure() {

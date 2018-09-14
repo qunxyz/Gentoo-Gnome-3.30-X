@@ -2,7 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2
+PYTHON_COMPAT=( python2_7 )
+GNOME2_LA_PUNT="yes"
+inherit gnome2 python-any-r1 systemd udev virtualx meson ninja-utils
 
 DESCRIPTION="The Gnome System Monitor"
 HOMEPAGE="https://help.gnome.org/users/gnome-system-monitor/"
@@ -30,10 +32,21 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
+python_check_deps() {
+	if use test; then
+		has_version "dev-python/pygobject:3[${PYTHON_USEDEP}]" &&
+		has_version "dev-python/dbusmock[${PYTHON_USEDEP}]"
+	fi
+}
+
+pkg_setup() {
+	use test && python-any-r1_pkg_setup
+}
+
 src_configure() {
-	# XXX: appdata is deprecated by appstream-glib, upstream must upgrade
-	gnome2_src_configure \
-		$(use_enable systemd) \
-		$(use_enable X broken-wnck) \
-		APPDATA_VALIDATE="$(type -P true)"
+	local emesonargs=(
+		-Dsystemd=$(usex systemd true false) \
+		-Dwnck=$(usex X true false) \
+	)
+	meson_src_configure
 }

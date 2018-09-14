@@ -19,7 +19,7 @@ KEYWORDS="amd64 ~x86"
 COMMON_DEPEND="
 	${PYTHON_DEPS}
 	>=app-misc/tracker-2[introspection(+)]
-	>=dev-python/pygobject-3.21.1:3[cairo,${PYTHON_USEDEP}]
+	>=dev-python/pygobject-3.29.1:3[cairo,${PYTHON_USEDEP}]
 	>=dev-libs/glib-2.28:2
 	>=dev-libs/gobject-introspection-1.35.9:=
 	>=media-libs/grilo-0.3.4:0.3[introspection]
@@ -56,7 +56,3 @@ src_prepare() {
 	sed -e '/sys.path.insert/d' -i "${S}"/gnome-music.in || die "python fixup sed failed"
 	default
 }
-
-#src_install() {
-#	python_fix_shebang "${D}"usr/bin/gnome-music
-#}

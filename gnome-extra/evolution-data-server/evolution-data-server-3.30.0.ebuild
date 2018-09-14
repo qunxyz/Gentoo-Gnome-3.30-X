@@ -149,4 +149,5 @@ src_install() {
 		doins "${FILESDIR}"/calentry.schema
 		dosym ../../../usr/share/${PN}/evolutionperson.schema /etc/openldap/schema/evolutionperson.schema
 	fi
+	rm "${D}/usr/etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop"
 }

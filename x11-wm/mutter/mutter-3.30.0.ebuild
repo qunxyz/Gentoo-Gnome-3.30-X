@@ -58,7 +58,7 @@ COMMON_DEPEND="
 	wayland? (
 		>=dev-libs/libinput-1.4
 		>=dev-libs/wayland-1.6.90
-		>=dev-libs/wayland-protocols-1.7
+		>=dev-libs/wayland-protocols-1.16
 		>=media-libs/mesa-10.3[egl,gbm,wayland]
 		sys-apps/systemd
 		>=virtual/libgudev-232:=
@@ -78,9 +78,9 @@ RDEPEND="${COMMON_DEPEND}
 	!x11-misc/expocity
 "
 
-PATCHES=(
-	"${FILESDIR}"/3.26.2-threaded-swap.patch
-)
+#PATCHES=(
+#	"${FILESDIR}"/3.26.2-threaded-swap.patch
+#)
 
 src_prepare() {
 	# Disable building of noinst_PROGRAM for tests

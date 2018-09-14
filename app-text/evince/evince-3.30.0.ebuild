@@ -19,6 +19,7 @@ KEYWORDS="~alpha amd64 ~arm ~arm64 ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd
 # gdk-pixbuf used all over the place
 COMMON_DEPEND="
 	dev-libs/atk
+	>=app-text/gspell-1.6.0
 	>=dev-libs/glib-2.36:2[dbus]
 	>=dev-libs/libxml2-2.5:2
 	sys-libs/zlib:=

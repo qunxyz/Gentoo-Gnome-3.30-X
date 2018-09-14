@@ -92,7 +92,7 @@ DEPEND="${COMMON_DEPEND}
 "
 PATCHES=(
 	# Make Wacom devices optional
-	"${FILESDIR}"/3.28.1-wacom-network_manager-optional.patch
+	"${FILESDIR}"/3.30.0-wacom-network_manager-optional.patch
 )
 
 # TypeErrors with python3; weird test errors with python2; all in power component that was made required now
