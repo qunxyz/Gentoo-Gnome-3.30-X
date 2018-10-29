@@ -48,6 +48,7 @@ RDEPEND="
 	utils? (
 		>=dev-util/gdbus-codegen-${PV}
 		virtual/libelf:0=
+        !<dev-libs/glib-utils-2.58
 	)
 "
 DEPEND="${RDEPEND}
@@ -122,7 +123,7 @@ src_prepare() {
 	# gdbus-codegen is a separate package
 	eapply "${FILESDIR}"/${PN}-2.56.1-external-gdbus-codegen-for-autotools.patch
 	# Leave gtester-report python shebang alone - handled by python_fix_shebang
-	sed -e '/${PYTHON}/d' -i glib/Makefile.{am,in} || die
+	sed -e '/${PYTHON}/d' -i glib/Makefile.am || die
 
 	# Also needed to prevent cross-compile failures, see bug #267603
 	eautoreconf
@@ -229,6 +230,14 @@ multilib_src_install_all() {
 		rm "${ED}usr/bin/gtester-report"
 		rm "${ED}usr/share/man/man1/gtester-report.1"
 	fi
+	
+	# Do not install bellow files, leave them to glib-utils
+	rm "${ED}usr/bin/gtester-report"
+	rm "${ED}usr/bin/glib-mkenums"
+	rm "${ED}usr/bin/glib-genmarshal"
+	#rm "${ED}usr/share/man/man1/gtester-report.1"
+	#rm "${ED}usr/share/man/man1/glib-genmarshal.1"
+	#rm "${ED}usr/share/man/man1/glib-mkenums.1"
 
 	# Do not install charset.alias even if generated, leave it to libiconv
 	rm -f "${ED}/usr/lib/charset.alias"
