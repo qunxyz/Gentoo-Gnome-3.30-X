@@ -64,6 +64,10 @@ PDEPEND="
 # Need gvfs[gtk] for recent:/// support
 MESON_BUILD_DIR="${WORKDIR}/${P}_mesonbuild"
 
+PATCHES=(
+    "${FILESDIR}/thumbnailer.patch"
+)
+
 src_prepare() {
 	if use previewer; then
 		DOC_CONTENTS="nautilus uses gnome-extra/sushi to preview media files.
