@@ -2,53 +2,49 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python3_6 )
 
-inherit bash-completion-r1 eutils meson gnome2 linux-info multilib python-any-r1 vala versionator virtualx
+# Python 3 used for g-ir-merge script
+PYTHON_COMPAT=( python3_{5,6,7} )
+
+inherit bash-completion-r1 gnome.org linux-info python-any-r1 meson vala
 
 DESCRIPTION="A tagging metadata database, search tool and indexer"
 HOMEPAGE="https://wiki.gnome.org/Projects/Tracker"
 
 LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0/100"
-IUSE="elibc_glibc seccomp stemmer test "
+IUSE="elibc_glibc icu kernel_linux networkmanager stemmer systemd test"
+RESTRICT="test"
 
-KEYWORDS="~alpha amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+KEYWORDS="amd64 ~x86"
 
-# According to NEWS, introspection is non-optional
 # glibc-2.12 needed for SCHED_IDLE (see bug #385003)
-# seccomp is automagic, though we want to use it whenever possible (linux)
-# >=media-libs/libmediaart-1.9:2.0 is suggested to be disabled for 1.10 for security;
-# It is disable in configure in 1.12; revisit for 1.14/2 (configure flag)
 RDEPEND="
-	>=app-i18n/enca-1.9
-	>=dev-db/sqlite-3.20:=
-	>=dev-libs/glib-2.44:2
-	>=dev-libs/gobject-introspection-0.9.5:=
-	>=dev-libs/icu-4.8.1.1:=
+	>=dev-db/sqlite-3.8.3:=
+	>=dev-libs/glib-2.58.0:2
+	>=dev-libs/gobject-introspection-1.0:=
+	icu? ( >=dev-libs/icu-4.8.1.1:= )
+	!icu? ( dev-libs/libunistring )
 	>=dev-libs/json-glib-1.0
-	>=media-libs/libpng-1.2:0=
+	>=dev-libs/libxml2-2.6
 	>=net-libs/libsoup-2.40:2.4
-	>=x11-libs/pango-1:=
-	sys-apps/util-linux
+	>sys-apps/dbus-1.3.1
+
 	elibc_glibc? ( >=sys-libs/glibc-2.12 )
-	>=x11-libs/gtk+-3:3
+	networkmanager? ( >=net-misc/networkmanager-0.8:= )
 	stemmer? ( dev-libs/snowball-stemmer )
-	seccomp? ( >=sys-libs/libseccomp-2.0 )
+	systemd? ( sys-apps/systemd )
 "
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	$(vala_depend)
-	dev-util/gdbus-codegen
 	>=dev-util/gtk-doc-am-1.8
 	>=dev-util/intltool-0.40.0
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
-	test? (
-		>=dev-libs/dbus-glib-0.82-r1
-		>=sys-apps/dbus-1.3.1[X] )
 "
+PDEPEND=""
+
 function inotify_enabled() {
 	if linux_config_exists; then
 		if ! linux_chkconfig_present INOTIFY_USER; then
@@ -70,23 +66,24 @@ pkg_setup() {
 }
 
 src_prepare() {
+	default
 	vala_src_prepare
-	eapply_user
 }
 
 src_configure() {
-        local emesonargs=(
+	local emesonargs=(
 		-Dbash_completion="$(get_bashcompdir)"
-                -Dstemmer=$(usex stemmer yes no)
-        )
+		-Ddocs=true
+		-Dfts=true
+		-Dfunctional_tests=false
+		-Dnetwork_manager=$(usex networkmanager yes no)
+		-Dstemmer=$(usex stemmer yes no)
+		-Dsystemd_user_services=$(usex systemd yes no)
+	)
+	if use icu; then
+		emesonargs+=(-Dunicode_support=icu)
+	else
+		emesonargs+=(-Dunicode_support=unistring)
+	fi
 	meson_src_configure
-}
-
-src_test() {
-	# G_MESSAGES_DEBUG, upstream bug #699401#c1
-	virtx emake check TESTS_ENVIRONMENT="dbus-run-session" G_MESSAGES_DEBUG="all"
-}
-
-src_install() {
-	meson_src_install
 }
