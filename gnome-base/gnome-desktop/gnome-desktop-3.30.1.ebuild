@@ -42,6 +42,10 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig
 "
 
+PATCHES=(
+    "$FILESDIR/thumbnailer.patch"
+)
+
 # Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xproto
 
 src_configure() {
