@@ -12,7 +12,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/Tracker"
 
 LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0/100"
-IUSE="elibc_glibc gstreamer +miner-fs seccomp test cue exif ffmpeg
+IUSE="elibc_glibc gstreamer +miner-fs seccomp test +cue exif ffmpeg
  flac gif gsf gstreamer gtk iptc +iso +jpeg libav mp3 pdf ps
  playlist rss +tiff upnp-av upower +vorbis +xml xmp xps"
 
@@ -113,6 +113,7 @@ src_prepare() {
 }
 
 src_configure() {
+    multilib_configure() {
         local emesonargs=(
 		-Dextract=true
 		$(meson_use test functional_tests)
@@ -143,7 +144,9 @@ src_configure() {
 #		emesonargs="${emesonargs} -Dgeneric_media_extractor=none"
 #	fi
 
-	meson_src_configure
+        meson_src_configure
+	}
+	multilib_foreach_abi multilib_configure
 }
 
 src_test() {
@@ -151,8 +154,12 @@ src_test() {
 	virtx emake check TESTS_ENVIRONMENT="dbus-run-session" G_MESSAGES_DEBUG="all"
 }
 
+src_compile() {
+	multilib_foreach_abi meson_src_compile
+}
+
 src_install() {
-	meson_src_install
+	multilib_foreach_abi meson_src_install
 	if use !rss ; then
 		rm ${D}/usr/share/tracker/miners/org.freedesktop.Tracker1.Miner.RSS.service
 	fi
